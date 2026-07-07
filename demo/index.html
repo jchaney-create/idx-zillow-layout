@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IDX Zillow Layout Demo</title>
+    <style>
+      body { margin: 0; background: #eef2f7; }
+      .IDX-text, .IDX-fieldData { font-weight: 600; }
+    </style>
+  </head>
+  <body>
+    <div id="IDX-main" class="IDX-page-listing IDX-category-details">
+      <div id="IDX-detailsWrapper">
+        <div id="IDX-detailsAddress">
+          <div class="IDX-detailsAddressInfo">
+            <span class="IDX-detailsAddressNumber">528 </span>
+            <span class="IDX-detailsAddressName">Lighthouse Dr # 6</span>
+          </div>
+          <div class="IDX-detailsAddressLocationInfo">
+            <span class="IDX-detailsAddressCity">Horseshoe Bay</span>,
+            <span class="IDX-detailsAddressStateAbrv">TX</span>
+            <span class="IDX-detailsAddressZipcode">78657</span>
+          </div>
+        </div>
+
+        <div id="IDX-primaryPhoto">
+          <img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200" alt="" />
+        </div>
+
+        <div id="IDX-detailsMainInfo" class="IDX-panel">
+          <div class="IDX-panel-body">
+            <div class="IDX-field-listingPrice IDX-field"><span class="IDX-label">Price</span><span class="IDX-text">$1,849,000</span></div>
+            <div class="IDX-field-bedrooms IDX-field"><span class="IDX-label">Bedrooms</span><span class="IDX-text">3</span></div>
+            <div class="IDX-field-totalBaths IDX-field"><span class="IDX-label">Total Baths</span><span class="IDX-text">3</span></div>
+            <div class="IDX-field-sqFt IDX-field"><span class="IDX-label">SqFt</span><span class="IDX-text">2,160</span></div>
+            <div class="IDX-field-yearBuilt IDX-field"><span class="IDX-label">Year Built</span><span class="IDX-text">1981</span></div>
+            <div class="IDX-field-propType IDX-field"><span class="IDX-label">Property Type</span><span class="IDX-text">Single Family Residential</span></div>
+          </div>
+        </div>
+
+        <div id="IDX-description">Waterfront townhome on Lake LBJ with panoramic views, boat slip, and renovated interior.</div>
+
+        <div id="IDX-fieldsWrapper">
+          <div class="IDX-panel">
+            <div class="IDX-panel-heading"><div class="IDX-panel-title">Interior Features</div></div>
+            <div class="IDX-panel-body">
+              <div class="IDX-field"><span class="IDX-label">Fireplace</span><span class="IDX-text">Yes</span></div>
+              <div class="IDX-field"><span class="IDX-label">Floor</span><span class="IDX-text">Tile, Carpet</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="IDX-detailsContactForm"></div>
+
+        <form>
+          <input type="hidden" name="listingID" value="1967481" />
+          <input type="hidden" name="address" value="528 Lighthouse Dr # 6" />
+          <input type="hidden" name="cityName" value="Horseshoe Bay" />
+          <input type="hidden" name="state" value="TX" />
+          <input type="hidden" name="zipcode" value="78657" />
+          <input type="hidden" name="listingPrice" value="$1,849,000" />
+        </form>
+
+        <a id="IDX-moreinfo" href="#moreinfo">More Information</a>
+        <a id="IDX-scheduleShowing" href="#schedule">Schedule Showing</a>
+        <a id="IDX-saveProperty" href="#save">Add to Favorites</a>
+      </div>
+    </div>
+
+    <script type="module" src="/src/index.js"></script>
+  </body>
+</html>
