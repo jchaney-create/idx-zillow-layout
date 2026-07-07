@@ -22,7 +22,6 @@ const HIDE_SELECTORS = [
   '#IDX-sharethis',
   '#IDX-detailsShareThis',
   '#IDX-detailsSlidesActions',
-  '#IDX-detailsTopNav',
   'ai-redesign-widget',
   '#idx-listing-insights',
 ].join(',\n  ');
@@ -36,7 +35,8 @@ const REPLACE_CSS = `
     display: none !important;
   }
 
-  html[data-izl-active='true'] #IDX-main.IDX-page-listing {
+  html[data-izl-active='true'] #IDX-main.IDX-page-listing,
+  html[data-izl-active='true'] #IDX-main.IDX-category-details {
     background: #eef2f7;
   }
 
@@ -92,8 +92,51 @@ export function relocateNativeContactForm(container) {
   }
 }
 
-export function ensureSingleLayoutContainer(config) {
-  const wrapper = document.querySelector('#IDX-detailsWrapper') || document.querySelector('#IDX-main');
+export function findMountWrapper() {
+  return document.querySelector('#IDX-detailsWrapper') || document.querySelector('#IDX-main');
+}
+
+export function waitForMountTarget({ timeoutMs = 20000, intervalMs = 100 } = {}) {
+  return new Promise((resolve, reject) => {
+    const started = Date.now();
+
+    const tryResolve = () => {
+      const wrapper = findMountWrapper();
+      if (wrapper) {
+        resolve(wrapper);
+        return true;
+      }
+      return false;
+    };
+
+    if (tryResolve()) return;
+
+    const observer = new MutationObserver(() => {
+      if (tryResolve()) observer.disconnect();
+    });
+
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+
+    const poll = () => {
+      if (tryResolve()) {
+        observer.disconnect();
+        return;
+      }
+
+      if (Date.now() - started >= timeoutMs) {
+        observer.disconnect();
+        reject(new Error('IDX details container not found'));
+        return;
+      }
+
+      setTimeout(poll, intervalMs);
+    };
+
+    poll();
+  });
+}
+
+export function ensureSingleLayoutContainer(config, wrapper = findMountWrapper()) {
   if (!wrapper) return null;
 
   let container = document.getElementById(config.containerId);
@@ -109,4 +152,8 @@ export function ensureSingleLayoutContainer(config) {
   }
 
   return container;
+}
+
+export function removeLayoutContainer(config) {
+  document.getElementById(config.containerId)?.remove();
 }

@@ -32,10 +32,10 @@ https://jchaney-create.github.io/idx-zillow-layout/idx-zillow-layout.css
 ```html
 <link
   rel="stylesheet"
-  href="https://jchaney-create.github.io/idx-zillow-layout/idx-zillow-layout.css?v=0.1.0"
+  href="https://jchaney-create.github.io/idx-zillow-layout/idx-zillow-layout.css?v=0.1.1"
 />
 <script
-  src="https://jchaney-create.github.io/idx-zillow-layout/idx-zillow-layout.iife.js?v=0.1.0"
+  src="https://jchaney-create.github.io/idx-zillow-layout/idx-zillow-layout.iife.js?v=0.1.1"
   data-replace-content="true"
 ></script>
 ```

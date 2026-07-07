@@ -1,3 +1,15 @@
+.izl-loading {
+  margin: 16px 0;
+}
+
+.izl-loading .izl-page {
+  background: #f6f8fb;
+  border: 1px dashed var(--izl-border);
+  border-radius: 12px;
+  text-align: center;
+  padding: 24px;
+}
+
 .izl-page {
   --izl-blue: #006aff;
   --izl-blue-dark: #0055cc;

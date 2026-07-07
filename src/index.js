@@ -8,7 +8,11 @@ import {
   deactivateReplaceMode,
   relocateNativeContactForm,
   ensureSingleLayoutContainer,
+  removeLayoutContainer,
+  waitForMountTarget,
 } from './replace.js';
+
+const LOG_PREFIX = '[idx-zillow-layout]';
 
 function findScript() {
   if (document.currentScript?.src?.includes('idx-zillow-layout')) {
@@ -27,26 +31,42 @@ function readConfig() {
   };
 }
 
+function log(...args) {
+  console.info(LOG_PREFIX, ...args);
+}
+
+function warn(...args) {
+  console.warn(LOG_PREFIX, ...args);
+}
+
 async function initLayout(config) {
-  if (!isDetailsPage()) return;
-
-  if (config.replaceContent) {
-    activateReplaceMode();
-  }
-
-  const container = config.autoMount
-    ? ensureSingleLayoutContainer(config)
-    : document.getElementById(config.containerId);
-
-  if (!container) {
-    console.warn(`[idx-zillow-layout] Container #${config.containerId} not found`);
+  if (!isDetailsPage()) {
+    log('Not a listing details page — skipping.');
     return;
   }
 
+  let wrapper;
+  try {
+    wrapper = await waitForMountTarget();
+  } catch (error) {
+    warn(error.message || 'IDX details container not found');
+    return;
+  }
+
+  const container = config.autoMount
+    ? ensureSingleLayoutContainer(config, wrapper)
+    : document.getElementById(config.containerId);
+
+  if (!container) {
+    warn(`Container #${config.containerId} not found`);
+    return;
+  }
+
+  container.classList.add('izl-loading');
   container.innerHTML = '<div class="izl-page"><p class="izl-muted">Loading listing layout…</p></div>';
 
   try {
-    const listing = await waitForListingData();
+    const listing = await waitForListingData({ timeoutMs: 20000 });
     const photos = parsePhotosFromDom();
     const galleryUrl = getPhotoGalleryUrl();
     const fieldGroups = parseFieldGroupsFromDom();
@@ -72,25 +92,26 @@ async function initLayout(config) {
       relocateNativeContactForm(container);
       activateReplaceMode();
     }
+
+    container.classList.remove('izl-loading');
+    container.classList.add('izl-ready');
+    log('Layout ready for', listing.fullAddress || listing.listingId || window.location.pathname);
   } catch (error) {
-    if (config.replaceContent) {
-      deactivateReplaceMode();
-    }
-    container.innerHTML = `<div class="izl-page"><p class="izl-muted">${error.message || 'Unable to render listing layout.'}</p></div>`;
+    deactivateReplaceMode();
+    removeLayoutContainer(config);
+    warn(error.message || 'Unable to render listing layout.');
   }
 }
 
 function boot() {
   const config = readConfig();
 
-  if (config.replaceContent && isDetailsPage()) {
-    activateReplaceMode();
-  }
+  const start = () => initLayout(config);
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => initLayout(config));
+    document.addEventListener('DOMContentLoaded', start);
   } else {
-    initLayout(config);
+    start();
   }
 }
 
